@@ -1,8 +1,0 @@
-streamlit
-numpy 
-pickle
-PyMuPDF
-python-docx
-google.generativeai
-faiss-cpu
-scikit-learn
