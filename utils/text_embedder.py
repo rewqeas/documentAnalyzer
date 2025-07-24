@@ -8,6 +8,7 @@ def embed_chunks(chunks):
 
     for i, chunk in enumerate(chunks):
         #skip empty chunks
+
         if not chunk.strip():
             embeddings.append(np.zeros(768))  # Assuming 768 is the embedding size
             continue
@@ -16,7 +17,7 @@ def embed_chunks(chunks):
 
         try:
             res = genai.generate_embeddings(
-                model = "models/text-embedding-3",
+                model = "models/text-embedding-001",
                 text = chunk,
                 task_type = "retrieval_document"
             )
@@ -25,7 +26,7 @@ def embed_chunks(chunks):
             print(f"Error generating embedding for chunk {i}: {e}")
             embeddings.append(np.zeros(768)) #fallback zero vector
 
-        return np.array(embeddings)
+    return np.array(embeddings)
 
 def embed_query(query):
     if not query.strip():
@@ -40,10 +41,11 @@ def embed_query(query):
         return np.array(res['embedding'])
     except Exception as e:
         print(f"Error generating embedding for query: {e}")
-        return np.zeros(768)
+        return np.zeros(768)    
 
 def retrive_similar_chunks(query,chunks, chunk_embeddings, top_k = 5):
     query_embed = embed_query(query)
     similarities = cosine_similarity([query_embed], chunk_embeddings)[0]
     top_indices = np.argsort(similarities)[-top_k:][::-1]#comes in ascending order, so we reverve it
-    return top_indices, similarities[top_indices]
+    top_chunks = [chunks[i] for i in top_indices]
+    return top_chunks

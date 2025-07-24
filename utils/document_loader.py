@@ -2,7 +2,7 @@ import fitz  # PyMuPDF
 from docx import Document #pip install python-docx
 
 def load_pdf(file):
-    doc = fitz.open(file)#open the pdf file
+    doc = fitz.open(stream = file.read(), filetype="pdf")#open the pdf file
     text = ""
 
     for page in doc:
